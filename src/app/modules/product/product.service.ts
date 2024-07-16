@@ -11,8 +11,6 @@ const getSingleProductFromDB = async (ProductID: string) => {
 };
 
 const getAllProductFromDB = async (query: Record<string, unknown>) => {
-  console.log(query);
-
   const queryObj = { ...query };
 
   const searchableFields = ["title", "brand"];
