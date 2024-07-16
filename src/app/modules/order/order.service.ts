@@ -51,6 +51,4 @@ const createOrderIntoDB = async (payload: TOrder) => {
   }
 };
 
-export default createOrderIntoDB;
-
 export const OrderServices = { createOrderIntoDB };
