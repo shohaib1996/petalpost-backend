@@ -5,7 +5,7 @@ export type TProduct = {
   quantity: number;
 };
 
-export type TPaymentMethod = "cashOnDelivery";
+export type TPaymentMethod = "cashOnDelivery" | "stripe";
 
 export type TOrder = {
   name: string;
