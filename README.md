@@ -1,3 +1,15 @@
+# MechKey-Heaven(Server)
+
+Its a mechanical keyboard Ecom. project. Basically user can see the available product on the web page.
+There are some feature like a user can search product by name, filter by price and sort by price.
+
+User can add product to the cart and after payment they can buy a product.
+
+There is also a functionality of adding product, delete the product.
+
+## Tech Stack
+
+**Server:** Node, Express, Mongoose, TypeScript 
 
 ## Installation
 
