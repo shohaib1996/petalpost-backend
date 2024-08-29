@@ -6,6 +6,7 @@ Install my-project with npm
 ```bash
 
 git clone https://github.com/shohaib1996/mechanicalKeyboard-backend.git
+cd mechanicalKeyboard-backend
 
 ```
 ```
