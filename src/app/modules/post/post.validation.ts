@@ -15,6 +15,18 @@ const postSchema = z.object({
     upvotes: z.number().min(0),
     downvotes: z.number().min(0),
     isPremium: z.boolean(),
+    voters: z.array(
+      z.object({
+        userId: z
+          .string()
+          .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+            message: "Invalid user ID",
+          }),
+        vote: z.number().refine((val) => val === 1 || val === -1, {
+          message: "Vote must be 1 (upvote) or -1 (downvote)",
+        }),
+      })
+    ),
   }),
 });
 const updatePostValidationSchema = z.object({
@@ -34,10 +46,33 @@ const updatePostValidationSchema = z.object({
     upvotes: z.number().min(0).optional(),
     downvotes: z.number().min(0).optional(),
     isPremium: z.boolean().optional(),
+    voters: z
+      .array(
+        z.object({
+          userId: z
+            .string()
+            .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+              message: "Invalid user ID",
+            }),
+          vote: z.number().refine((val) => val === 1 || val === -1, {
+            message: "Vote must be 1 (upvote) or -1 (downvote)",
+          }),
+        })
+      )
+      .optional(),
+  }),
+});
+
+const voteValidation = z.object({
+  body: z.object({
+    vote: z.number().refine((val) => val === 1 || val === -1, {
+      message: "Vote must be 1 (upvote) or -1 (downvote)",
+    }),
   }),
 });
 
 export const PostValidationSchema = {
   postSchema,
   updatePostValidationSchema,
+  voteValidation,
 };

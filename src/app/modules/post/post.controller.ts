@@ -3,6 +3,7 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { PostServices } from "./post.service";
 import { JwtPayload } from "jsonwebtoken";
+import mongoose from "mongoose";
 interface JwtPayloadWithId extends JwtPayload {
   id: string;
 }
@@ -62,10 +63,27 @@ const deletePost = catchAsync(async (req, res) => {
   });
 });
 
+const votePost = catchAsync(async (req, res) => {
+  const postId = new mongoose.Types.ObjectId(req.params.id);
+  const { vote } = req.body;
+  const userId = new mongoose.Types.ObjectId((req.user as JwtPayloadWithId).id);
+
+  // Call the service to handle voting logic
+  const result = await PostServices.voteOnPost(postId, userId, vote);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Vote registered successfully.",
+    data: result,
+  });
+});
+
 export const PostController = {
   getAllPosts,
   createPost,
   updatePost,
   getPostById,
   deletePost,
+  votePost,
 };

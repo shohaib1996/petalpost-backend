@@ -18,5 +18,6 @@ router.post(
 router.put("/:id", auth(USER_ROLE.user), validateRequest(PostValidationSchema.updatePostValidationSchema), PostController.updatePost);
 
 router.delete("/:id", auth(USER_ROLE.user), PostController.deletePost);
+router.post('/:id/vote', auth(USER_ROLE.user), validateRequest(PostValidationSchema.voteValidation), PostController.votePost);
 
 export const postRouter = router;

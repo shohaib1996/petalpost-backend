@@ -17,6 +17,12 @@ const PostSchema = new Schema<IPost>(
     upvotes: { type: Number, default: 0 },
     downvotes: { type: Number, default: 0 },
     isPremium: { type: Boolean, default: false },
+    voters: [
+      {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        vote: { type: Number, enum: [1, -1] }, // Upvote (1) or downvote (-1)
+      },
+    ],
   },
   {
     timestamps: true,

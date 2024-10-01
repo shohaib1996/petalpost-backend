@@ -11,5 +11,5 @@ export interface IPost {
   upvotes: number;
   downvotes: number;
   isPremium: boolean;
-
+  voters: {  userId: mongoose.Types.ObjectId, vote: number }[]; 
 }
