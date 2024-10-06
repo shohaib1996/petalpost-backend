@@ -63,11 +63,32 @@ const editComment = catchAsync(async (req, res) => {
       data: result,
     });
   });
+
+  const getCommentsByPostId = catchAsync(async (req, res) => {
+    const { id: postId } = req.params; // 'id' refers to the post ID
+  
+    const result = await CommentServices.getCommentsByPostIdFromDB(postId);
+  
+    if (!result || result.length === 0) {
+      return res.status(httpStatus.NOT_FOUND).json({
+        success: false,
+        message: "No comments found for this post",
+      });
+    }
+  
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Comments retrieved successfully.",
+      data: result,
+    });
+  });
   
 
 export const CommentController = {
   createComment,
   replyToComment,
   editComment,
-  deleteComment
+  deleteComment,
+  getCommentsByPostId
 };

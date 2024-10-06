@@ -5,12 +5,12 @@ import { Post } from "./post.model";
 import mongoose from "mongoose";
 
 const getAllPostsFromDB = async () => {
-  const posts = await Post.find();
+  const posts = await Post.find().populate("author");
   return posts;
 };
 
 const getPostByIdFromDB = async (postId: string): Promise<IPost | null> => {
-  const post = await Post.findById(postId);
+  const post = await Post.findById(postId).populate("author");
 
   if (!post) {
     throw new appError(httpStatus.NOT_FOUND, "Post not found");
