@@ -73,6 +73,7 @@ const editComment = catchAsync(async (req, res) => {
       return res.status(httpStatus.NOT_FOUND).json({
         success: false,
         message: "No comments found for this post",
+        data: []
       });
     }
   

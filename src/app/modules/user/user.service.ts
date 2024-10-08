@@ -32,6 +32,7 @@ const loginUserIntoDB = async (loginData: ILoginUser) => {
     email: user.email,
     role: user.role,
     name: user.name,
+    avatar: user.avatar
   };
 
   // Generate JWT access token
