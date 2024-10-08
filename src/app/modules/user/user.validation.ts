@@ -30,6 +30,7 @@ const updateUserProfileSchema = z.object({
     name: z.string().min(1, "Name is required").optional(),
     email: z.string().email("Invalid email").optional(),
     avatar: z.string().url("Avatar must be a valid URL").optional(),
+    isPremium: z.boolean().optional()
   }),
 });
 
