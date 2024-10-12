@@ -9,7 +9,7 @@ interface JwtPayloadWithId extends JwtPayload {
 }
 
 const getAllPosts = catchAsync(async (req, res) => {
-  const result = await PostServices.getAllPostsFromDB();
+  const result = await PostServices.getAllPostsFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -79,6 +79,18 @@ const votePost = catchAsync(async (req, res) => {
   });
 });
 
+const getPostByUserId = catchAsync(async (req, res) => {
+  const userId = req.params.userId; // Get user ID from URL parameter
+  const result = await PostServices.getPostsByUserIdFromDB(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Posts retrieved successfully.",
+    data: result,
+  });
+});
+
 export const PostController = {
   getAllPosts,
   createPost,
@@ -86,4 +98,5 @@ export const PostController = {
   getPostById,
   deletePost,
   votePost,
+  getPostByUserId
 };

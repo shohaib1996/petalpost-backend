@@ -3,9 +3,15 @@ import appError from "../../midddleware/appError";
 import { IPost } from "./post.interface";
 import { Post } from "./post.model";
 import mongoose from "mongoose";
+import QueryBuilder from "../../builder/QuiryBuilder";
 
-const getAllPostsFromDB = async () => {
-  const posts = await Post.find().populate("author");
+const getAllPostsFromDB = async (query: Record<string, unknown>) => {
+  const postQuery = new QueryBuilder(Post.find().populate("author"), query)
+    .filterByTitle()
+    .sortByPopularity()
+    .paginate(); // Apply pagination
+
+  const posts = await postQuery.modelQuery;
   return posts;
 };
 
@@ -62,7 +68,7 @@ const voteOnPost = async (
     throw new Error("Post not found");
   }
 
-  // Find if the user has already voted   
+  // Find if the user has already voted
   const existingVoteIndex = post.voters.findIndex(
     (voter) => voter.userId.toString() === userId.toString()
   );
@@ -104,6 +110,11 @@ const voteOnPost = async (
   return post;
 };
 
+const getPostsByUserIdFromDB = async (userId: string) => {
+  const posts = await Post.find({ author: userId }).populate("author");
+  return posts;
+};
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostsFromDB,
@@ -111,4 +122,5 @@ export const PostServices = {
   getPostByIdFromDB,
   deletePostFromDB,
   voteOnPost,
+  getPostsByUserIdFromDB,
 };

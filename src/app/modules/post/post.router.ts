@@ -14,6 +14,7 @@ router.post(
   validateRequest(PostValidationSchema.postSchema),
   PostController.createPost
 );
+router.get("/user/:userId", auth(USER_ROLE.user), PostController.getPostByUserId);
 
 router.put("/:id", auth(USER_ROLE.user), validateRequest(PostValidationSchema.updatePostValidationSchema), PostController.updatePost);
 

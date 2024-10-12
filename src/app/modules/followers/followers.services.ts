@@ -28,17 +28,37 @@ const followUser = async (userId: string, followingId: string) => {
   return userFollowers;
 };
 const getFollowers = async (userId: string) => {
-    try {
-      const followers = await Followers.find({ following: userId }).select('userId');
-      return followers;
-    } catch (error) {
-      console.error("Error retrieving followers:", error);
-      throw new Error("Could not retrieve followers");
+  try {
+    const followers = await Followers.find({ following: userId }).select(
+      "userId"
+    ).populate({ path: "userId", model: "User", select: "name email" });
+    return followers;
+  } catch (error) {
+    console.error("Error retrieving followers:", error);
+    throw new Error("Could not retrieve followers");
+  }
+};
+
+const getFollowing = async (userId: string) => {
+  try {
+    // Find the user with their following list
+    const user = await Followers.findOne({ userId })
+      .select("following")
+      .populate({ path: "following", model: "User", select: "name email" });
+
+    if (!user) {
+      throw new Error("User not found or no following data available.");
     }
-  };
-  
+
+    return user.following; // Return the list of users they are following
+  } catch (error) {
+    console.error("Error retrieving following list:", error);
+    throw new Error("Could not retrieve following list");
+  }
+};
 
 export const FollowServices = {
   followUser,
-  getFollowers
+  getFollowers,
+  getFollowing,
 };
