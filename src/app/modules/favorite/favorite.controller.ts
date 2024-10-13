@@ -7,8 +7,10 @@ import sendResponse from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
 import { FavoriteService } from "./favorite.services";
 
-
 const addFavorite = catchAsync(async (req: Request, res: Response) => {
+
+  console.log(req);
+  
   const userId = (req.user as JwtPayload).id; // Get user ID from token
   const postId = req.body.postId;
 
@@ -35,16 +37,21 @@ const removeFavorite = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getFavorites = catchAsync(async (req: Request, res: Response) => {
-  const userId = (req.user as JwtPayload).id; // Get user ID from token
+  const userId = (req.user as any).id;
 
-  const result = await FavoriteService.getFavoritePostsByUserId(userId);
+  console.log(userId);
+  
+
+  const favorites = await FavoriteService.getFavoritePostsByUserId(userId);
+
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: 200,
     success: true,
-    message: "Favorite posts retrieved successfully.",
-    data: result,
+    message: "Favorites retrieved successfully",
+    data: favorites,
   });
 });
+
 
 export const FavoriteController = {
   addFavorite,

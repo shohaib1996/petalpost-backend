@@ -5,6 +5,7 @@ import { commentRouters } from "../modules/comment/comment.route";
 import { uploadImageRouter } from "../modules/image/uploadRoutes";
 import { paymentRouters } from "../modules/payment/payment.router";
 import { followersRouter } from "../modules/followers/followers.route";
+import { favoriteRoutes } from "../modules/favorite/favorite.router";
 
 
 const router = Router();
@@ -33,6 +34,10 @@ const moduleRoutes = [
   {
     path: "/user",
     route: followersRouter,
+  },
+  {
+    path: "/post",
+    route: favoriteRoutes,
   },
 
 ];

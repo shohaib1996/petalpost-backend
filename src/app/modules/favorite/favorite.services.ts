@@ -58,14 +58,19 @@ const removeFavoritePost = async (userId: string, postId: string) => {
 };
 
 const getFavoritePostsByUserId = async (userId: string) => {
-    const favorite = await Favorite.findOne({ userId }).populate("postId");
 
-    if (!favorite) {
-      throw new appError(httpStatus.NOT_FOUND, "User favorites not found");
-    }
-  
-    return favorite.postId;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new appError(400, "Invalid user ID format");
+  }
+  const favorite = await Favorite.findOne({ userId }).populate("postId");
+
+  if (!favorite) {
+    throw new appError(404, "No favorites found for this user");
+  }
+
+  return favorite.postId;
 };
+
 
 export const FavoriteService = {
   addFavoritePost,
