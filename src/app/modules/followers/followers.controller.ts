@@ -41,9 +41,22 @@ const getFollowing = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const unfollow = catchAsync(async (req, res) => {
+  const { userId, followingId } = req.body;
+
+  const result = await FollowServices.unfollowUser(userId, followingId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User unfollowed successfully.",
+    data: result,
+  });
+});
 
 export const FollowersController = {
   follow,
   getFollowers,
   getFollowing,
+  unfollow,
 };

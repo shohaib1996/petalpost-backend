@@ -27,4 +27,10 @@ router.get(
   FollowersController.getFollowing
 );
 
+router.put(
+  "/unfollow",
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  FollowersController.unfollow
+);
+
 export const followersRouter = router;
