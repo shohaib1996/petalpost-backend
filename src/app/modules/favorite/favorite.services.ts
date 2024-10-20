@@ -28,7 +28,9 @@ const addFavoritePost = async (userId: string, postId: string) => {
   }
 
   // Check if the post is already in favorites
-  const isFavorite = favorite.postId.includes(new mongoose.Types.ObjectId(postId));
+  const isFavorite = favorite.postId.includes(
+    new mongoose.Types.ObjectId(postId)
+  );
 
   if (isFavorite) {
     throw new appError(httpStatus.BAD_REQUEST, "Post already in favorites");
@@ -42,27 +44,33 @@ const addFavoritePost = async (userId: string, postId: string) => {
 };
 
 const removeFavoritePost = async (userId: string, postId: string) => {
-    const favorite = await Favorite.findOne({ userId });
-    if (!favorite) {
-      throw new appError(httpStatus.NOT_FOUND, "User favorites not found");
-    }
-  
-    // Remove post from user's favorites
-    favorite.postId = favorite.postId.filter(
-      (favoriteId) => favoriteId.toString() !== postId
-    );
-  
-    await favorite.save();
-  
-    return favorite;
+  const favorite = await Favorite.findOne({ userId });
+  if (!favorite) {
+    throw new appError(httpStatus.NOT_FOUND, "User favorites not found");
+  }
+
+  // Remove post from user's favorites
+  favorite.postId = favorite.postId.filter(
+    (favoriteId) => favoriteId.toString() !== postId
+  );
+
+  await favorite.save();
+
+  return favorite;
 };
 
 const getFavoritePostsByUserId = async (userId: string) => {
-
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     throw new appError(400, "Invalid user ID format");
   }
-  const favorite = await Favorite.findOne({ userId }).populate("postId");
+  const favorite = await Favorite.findOne({ userId }).populate({
+    path: "postId",
+    populate: {
+      path: "author",
+      model: "User",
+      select: "name email",
+    },
+  });
 
   if (!favorite) {
     throw new appError(404, "No favorites found for this user");
@@ -70,7 +78,6 @@ const getFavoritePostsByUserId = async (userId: string) => {
 
   return favorite.postId;
 };
-
 
 export const FavoriteService = {
   addFavoritePost,
