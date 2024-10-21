@@ -71,9 +71,28 @@ const updateUserIntoDB = async (userId: string, payload: Partial<IUser>) => {
 
   return updatedUser;
 };
+const getAllUsersFromDB = async () => {
+  const users = await User.find().select("-password");  
+  return users;
+};
+
+const updateUserRoleInDB = async (userId: string, role: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new appError(httpStatus.NOT_FOUND, "User not found!");
+  }
+  user.role = role;
+
+  await user.save();
+  const updatedUser = await User.findById(userId).select("-password");
+  return updatedUser;
+};
+
 
 export const UserServices = {
   createUserIntoDB,
   loginUserIntoDB,
   updateUserIntoDB,
+  getAllUsersFromDB,
+  updateUserRoleInDB
 };

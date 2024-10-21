@@ -8,7 +8,6 @@ interface JwtPayloadWithId extends JwtPayload {
   id: string;
 }
 
-
 const createUser = catchAsync(async (req, res) => {
   const result = await UserServices.createUserIntoDB(req.body);
   sendResponse(res, {
@@ -32,7 +31,7 @@ const loginUser = catchAsync(async (req, res) => {
 });
 
 const updateUserProfile = catchAsync(async (req, res) => {
-  const userId = (req.user as JwtPayloadWithId).id;  
+  const userId = (req.user as JwtPayloadWithId).id;
   const userData = req.body;
 
   const result = await UserServices.updateUserIntoDB(userId, userData);
@@ -43,10 +42,35 @@ const updateUserProfile = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await UserServices.getAllUsersFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All users retrieved successfully",
+    data: users,
+  });
+});
+
+const updateUserRole = catchAsync(async (req, res) => {
+  const userId = req.params.id;
+  const { role } = req.body;
+
+  const result = await UserServices.updateUserRoleInDB(userId, role);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User role updated successfully",
+    data: result,
+  });
+});
+
 
 export const UserController = {
   createUser,
   loginUser,
   updateUserProfile,
-
+  getAllUsers,
+  updateUserRole
 };
