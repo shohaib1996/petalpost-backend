@@ -18,6 +18,18 @@ const getAllPosts = catchAsync(async (req, res) => {
   });
 });
 
+const getAllPostsWithoutPagination = catchAsync(async (req, res) => {
+  // Retrieve all posts without pagination or filters
+  const result = await PostServices.getAllPostsFromDBWithoutPagination();
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All posts retrieved successfully.",
+    data: result,
+  });
+});
+
 const getPostById = catchAsync(async (req, res) => {
   const postId = req.params.id; // Assuming the post ID is passed as a URL parameter
   const result = await PostServices.getPostByIdFromDB(postId);
@@ -91,6 +103,17 @@ const getPostByUserId = catchAsync(async (req, res) => {
   });
 });
 
+const getTopAuthors = catchAsync(async (req, res) => {
+  const result = await PostServices.getTopAuthorsByUpvotes();
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Top 6 authors retrieved successfully.",
+    data: result,
+  });
+});
+
 export const PostController = {
   getAllPosts,
   createPost,
@@ -98,5 +121,7 @@ export const PostController = {
   getPostById,
   deletePost,
   votePost,
-  getPostByUserId
+  getPostByUserId,
+  getAllPostsWithoutPagination,
+  getTopAuthors
 };

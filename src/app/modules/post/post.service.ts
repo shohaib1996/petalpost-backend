@@ -5,6 +5,9 @@ import { Post } from "./post.model";
 import mongoose from "mongoose";
 import QueryBuilder from "../../builder/QuiryBuilder";
 
+
+
+
 const getAllPostsFromDB = async (query: Record<string, unknown>) => {
   const postQuery = new QueryBuilder(Post.find().populate("author"), query)
     .filterByTitle()
@@ -115,6 +118,46 @@ const getPostsByUserIdFromDB = async (userId: string) => {
   return posts;
 };
 
+const getAllPostsFromDBWithoutPagination = async () => {
+  const posts = await Post.find().populate("author");
+  return posts;
+};
+
+const getTopAuthorsByUpvotes = async () => {
+  const result = await Post.aggregate([
+    {
+      $group: {
+        _id: "$author",
+        totalUpvotes: { $sum: "$upvotes" },
+        authorName: { $first: "$author.name" } 
+      }
+    },
+    {
+      $sort: { totalUpvotes: -1 }
+    },
+    {
+      $limit: 6
+    },
+    {
+      $lookup: {
+        from: "users", 
+        localField: "_id",
+        foreignField: "_id",
+        as: "authorDetails"
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        totalUpvotes: 1,
+        authorDetails: { $arrayElemAt: ["$authorDetails", 0] }
+      }
+    }
+  ]);
+
+  return result;
+};
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostsFromDB,
@@ -123,4 +166,6 @@ export const PostServices = {
   deletePostFromDB,
   voteOnPost,
   getPostsByUserIdFromDB,
+  getAllPostsFromDBWithoutPagination,
+  getTopAuthorsByUpvotes
 };
