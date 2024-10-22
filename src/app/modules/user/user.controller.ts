@@ -66,11 +66,23 @@ const updateUserRole = catchAsync(async (req, res) => {
   });
 });
 
+const getPremiumUserStats = catchAsync(async (req, res) => {
+  const stats = await UserServices.getPremiumUserStatsFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Premium user statistics retrieved successfully",
+    data: stats,
+  });
+});
+
 
 export const UserController = {
   createUser,
   loginUser,
   updateUserProfile,
   getAllUsers,
-  updateUserRole
+  updateUserRole,
+  getPremiumUserStats
 };

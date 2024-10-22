@@ -33,4 +33,10 @@ router.put(
   UserController.updateUserProfile
 );
 
+router.get(
+  "/users/premium-stats",
+  auth(USER_ROLE.admin),
+  UserController.getPremiumUserStats
+);
+
 export const userRoutes = router;
